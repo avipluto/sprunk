@@ -1,0 +1,1034 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Sprunk is lemon-lime soda made with real citrus juice and cane sugar, carbonated hard so the first sip snaps.">
+<meta name="theme-color" content="#04331F">
+<meta property="og:title" content="Sprunk">
+<meta property="og:description" content="Lemon-lime soda with real citrus juice and a hard fizz. Crack it cold.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%2304331F'/%3E%3Ccircle cx='32' cy='32' r='25' fill='%23A6E34F'/%3E%3Ctext x='32' y='44' font-size='34' text-anchor='middle' fill='%2304331F' font-family='Georgia,serif' font-style='italic' font-weight='700'%3ES%3C/text%3E%3C/svg%3E">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Sprunk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Shrikhand&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(function () {
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduce && window.gsap && window.ScrollTrigger) document.documentElement.classList.add("motion");
+})();
+</script>
+<style>
+/* Layout: a pinned stage where scrolling drives one 3D can between three story panels, then ice, emerald and lemon bands for flavors, process, nutrition and the last call */
+:root{
+  --deep:#04331F;
+  --emerald:#0B6B3D;
+  --leaf:#17985A;
+  --lemon:#FFE14A;
+  --lemon-press:#C9A912;
+  --lime:#A6E34F;
+  --ice:#EDF8F0;
+  --ink:#06291A;
+  --ink-soft:#355848;
+  --foam:#F4FFF6;
+  --foam-soft:#BFE0CA;
+  --pith:#FFF8DA;
+  --lemon-flesh:#FFEA80;
+  --lime-pith:#EAF8CC;
+  --lime-rind:#3E9B2F;
+  --paper:#FFFFFF;
+  --paper-ink:#111111;
+  --zero-bg:#E3ECE7;
+  --ginger-bg:#E2862C;
+  --disc-original:#A6E34F;
+  --disc-zero:#CFE6D7;
+  --disc-ginger:#FFD08F;
+  --nav-glass:rgba(4,51,31,.84);
+  --mega-stroke:rgba(255,225,74,.26);
+  --chip-bg:rgba(4,51,31,.45);
+  --shadow-deep:rgba(2,30,17,.38);
+  --font-display:"Shrikhand","Cooper Black",Georgia,serif;
+  --font-body:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --gl:max(16px, env(safe-area-inset-left, 0px));
+  --gr:max(16px, env(safe-area-inset-right, 0px));
+}
+*,*::before,*::after{box-sizing:border-box}
+html{background:var(--deep);overflow-x:clip}
+body{background:var(--deep);color:var(--foam);font-family:var(--font-body);font-size:17px;line-height:1.55;overflow-x:clip;-webkit-font-smoothing:antialiased}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+.lenis.lenis-stopped{overflow:hidden}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--lemon);outline-offset:3px;border-radius:6px}
+.band-ice :focus-visible{outline-color:var(--emerald)}
+.band-lemon :focus-visible{outline-color:var(--deep)}
+h1,h2,h3{font-family:var(--font-display);font-weight:400;line-height:.98;letter-spacing:-.005em;text-wrap:balance;margin:0}
+p{margin:0}
+sub{font-size:.68em;vertical-align:-.18em;line-height:0}
+.wrap{max-width:1180px;margin-inline:auto;padding-left:var(--gl);padding-right:var(--gr)}
+.eyebrow{font-weight:800;font-stretch:80%;text-transform:uppercase;letter-spacing:.14em;font-size:.8rem}
+
+/* Nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;padding-top:env(safe-area-inset-top,0px);transition:background-color .3s ease, box-shadow .3s ease}
+.nav.is-solid{background:var(--nav-glass);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.nav-inner{max-width:1180px;margin-inline:auto;padding-left:var(--gl);padding-right:var(--gr);padding-block:14px;display:flex;align-items:center;gap:28px}
+.brand{font-family:var(--font-display);font-size:1.75rem;line-height:1;color:var(--lemon);text-decoration:none}
+.nav-links{display:flex;gap:26px;margin-left:auto}
+.nav-links a{text-decoration:none;font-weight:700;font-size:.95rem;color:var(--foam)}
+.nav-links a:hover{color:var(--lemon)}
+@media (max-width:760px){.nav-links{display:none}.nav .btn{margin-left:auto}}
+
+/* Buttons */
+.btn{font-family:var(--font-body);font-weight:800;font-size:1rem;line-height:1;letter-spacing:.01em;border:0;border-radius:999px;padding:16px 26px;cursor:pointer;display:inline-flex;align-items:center;gap:10px;text-decoration:none;transition:transform .15s ease, box-shadow .15s ease, color .2s ease}
+.btn-lemon{background:var(--lemon);color:var(--deep);box-shadow:0 5px 0 var(--lemon-press)}
+.btn-lemon:hover{transform:translateY(-2px);box-shadow:0 7px 0 var(--lemon-press)}
+.btn-lemon:active{transform:translateY(4px);box-shadow:0 1px 0 var(--lemon-press)}
+.btn-line{background:transparent;color:var(--foam);box-shadow:inset 0 0 0 2px var(--foam-soft)}
+.btn-line:hover{color:var(--lemon);box-shadow:inset 0 0 0 2px var(--lemon)}
+.btn-ink{background:var(--deep);color:var(--lemon);box-shadow:0 5px 0 var(--emerald)}
+.btn-ink:hover{transform:translateY(-2px);box-shadow:0 7px 0 var(--emerald)}
+.btn-ink:active{transform:translateY(4px);box-shadow:0 1px 0 var(--emerald)}
+.btn-sm{padding:11px 18px;font-size:.9rem}
+
+/* Stage (hero) */
+.stage{position:relative;overflow:hidden;background:radial-gradient(120% 95% at 68% 40%, var(--leaf) 0%, var(--emerald) 38%, var(--deep) 82%);padding-top:84px}
+.fizz{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+.mega{position:absolute;left:0;right:0;top:50%;transform:translateY(-52%);z-index:1;pointer-events:none;user-select:none;white-space:nowrap;line-height:.8}
+.mega span{display:inline-block;font-family:var(--font-display);font-size:clamp(9rem,30vw,28rem);color:transparent;-webkit-text-stroke:2px var(--mega-stroke);padding-left:3vw}
+.slices{position:absolute;inset:0;z-index:2;pointer-events:none}
+.slice-wrap{position:absolute;left:var(--l);top:var(--t);width:var(--s);height:var(--s)}
+.slice-wrap svg{display:block;width:100%;height:100%;filter:drop-shadow(0 18px 22px var(--shadow-deep))}
+.slice-wrap.soft svg{filter:blur(3px)}
+.can-wrap{position:relative;z-index:3;height:min(66svh,540px);pointer-events:none}
+.can-wrap canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .9s ease}
+.can-wrap canvas.ready{opacity:1}
+.can-fallback{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
+.can-fallback .mini-can{--h:min(46svh,380px)}
+.stage-panels{position:relative;z-index:4;max-width:1180px;margin-inline:auto;padding-left:var(--gl);padding-right:var(--gr);padding-block:8px 88px;display:grid;gap:56px}
+.panel{max-width:34rem}
+.panel .eyebrow{color:var(--lime)}
+.panel h1{font-size:clamp(3.2rem,7.2vw,6.4rem);color:var(--foam);margin-block:14px 18px}
+.panel h2{font-size:clamp(2.6rem,5.4vw,4.8rem);color:var(--foam);margin-block:14px 18px}
+.panel .lede{font-size:clamp(1.05rem,1.35vw,1.2rem);color:var(--foam-soft);max-width:30rem}
+.actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:28px}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0 0;padding:0;list-style:none}
+.chips li{font-weight:800;font-stretch:85%;font-size:.92rem;padding:8px 14px;border-radius:999px;background:var(--chip-bg);box-shadow:inset 0 0 0 1.5px var(--lime);color:var(--foam);font-variant-numeric:tabular-nums}
+.scroll-hint{display:none}
+
+/* Stage, scroll-driven layout */
+.motion .stage{height:100svh;min-height:600px;padding-top:0}
+.motion .can-wrap{position:absolute;inset:0;height:auto}
+.motion .can-fallback .mini-can{--h:min(56svh,470px)}
+.motion .stage-panels{height:100%;padding-block:96px 64px;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr);align-items:center;gap:0}
+.motion .panel{grid-area:1/1;width:min(32rem,46%)}
+.motion .p2{justify-self:end}
+.motion .p2,.motion .p3{visibility:hidden;opacity:0}
+.motion .scroll-hint{position:absolute;z-index:4;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;font-weight:800;font-stretch:80%;font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;color:var(--foam-soft)}
+.scroll-hint i{display:block;width:2px;height:38px;border-radius:2px;background:linear-gradient(var(--lime),transparent);transform-origin:top;animation:drip 1.6s ease-in-out infinite}
+@keyframes drip{0%{transform:scaleY(0);opacity:1}60%{transform:scaleY(1);opacity:1}100%{transform:scaleY(1);opacity:0}}
+@media (max-width:760px){
+  .motion .stage-panels{align-items:end;padding-block:80px 36px}
+  .motion .panel{width:100%}
+  .motion .p2{justify-self:start}
+  .panel h1{font-size:clamp(2.6rem,12vw,3.6rem);margin-block:10px 12px}
+  .panel h2{font-size:clamp(2.2rem,10vw,3.1rem);margin-block:10px 12px}
+  .panel .lede{font-size:1rem}
+  .actions{margin-top:20px}
+  .motion .scroll-hint{display:none}
+  .slice-wrap{--s:calc(var(--s0) * .55)!important;left:var(--lsm);top:var(--tsm)}
+  .slice-wrap.hide-sm{display:none}
+}
+
+/* Ticker */
+.ticker-zone{position:relative;z-index:5;overflow-x:clip;overflow-y:visible;margin-block:-18px}
+.ticker{position:relative;width:110%;margin-left:-5%;background:var(--lemon);color:var(--deep);overflow:hidden;padding-block:18px;transform:rotate(-2deg);box-shadow:0 14px 30px var(--shadow-deep)}
+.ticker-skew{display:flex;width:max-content}
+.ticker-track{display:flex;width:max-content;font-family:var(--font-display);font-size:clamp(2rem,4.4vw,3.4rem);line-height:1.1;white-space:nowrap}
+.ticker-track span{display:inline-flex;align-items:center;gap:40px;padding-right:40px}
+.ticker-track span::after{content:"";width:.55em;height:.55em;border-radius:50%;background:radial-gradient(circle at 50% 50%, var(--lime) 0 52%, var(--lime-rind) 54% 100%)}
+
+/* Bands */
+.band{position:relative;padding-block:clamp(96px,11vw,150px) clamp(84px,10vw,140px)}
+.band-ice{background:var(--ice);color:var(--ink)}
+.band-deep{background:var(--deep);color:var(--foam)}
+.band-lemon{background:var(--lemon);color:var(--ink)}
+.section-head{display:grid;gap:16px;max-width:42rem;margin-bottom:clamp(48px,6vw,80px)}
+.section-head h2{font-size:clamp(2.6rem,6vw,4.8rem)}
+.band-ice .eyebrow,.band-lemon .eyebrow{color:var(--emerald)}
+.band-deep .eyebrow{color:var(--lime)}
+.lede{font-size:1.15rem;max-width:36rem}
+.band-ice .lede,.band-lemon .lede{color:var(--ink-soft)}
+.band-deep .lede{color:var(--foam-soft)}
+
+/* Mini cans (flat, CSS) */
+.mini-can{--h:240px;--w:calc(var(--h) * .54);position:relative;display:block;width:var(--w);height:var(--h);clip-path:polygon(9% 0,91% 0,100% 5.5%,100% 95%,92% 100%,8% 100%,0 95%,0 5.5%);background:linear-gradient(90deg,#7C8884 0%,#EEF3F1 28%,#AEB9B5 52%,#5F6B67 100%)}
+.mini-can .label{--spin:0;position:absolute;left:0;right:0;top:5.5%;bottom:5%;background-color:var(--label-bg,var(--leaf));background-image:var(--label,none);background-repeat:repeat-x;background-size:calc(var(--h) * 1.79) 100%;background-position:calc(var(--w) / 2 - var(--h) * .895 - var(--spin) * var(--h) * 1.79) 0}
+.mini-can::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.45) 0%,rgba(0,0,0,.1) 14%,rgba(255,255,255,.42) 27%,rgba(255,255,255,.06) 38%,rgba(0,0,0,0) 60%,rgba(0,0,0,.2) 82%,rgba(0,0,0,.55) 100%)}
+.label[data-flavor="original"]{--label-bg:var(--leaf)}
+.label[data-flavor="zero"]{--label-bg:var(--zero-bg)}
+.label[data-flavor="ginger"]{--label-bg:var(--ginger-bg)}
+.can-shade{filter:drop-shadow(0 22px 18px var(--shadow-deep))}
+
+/* Flavors */
+.flavor-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(28px,4vw,56px)}
+@media (max-width:860px){.flavor-grid{grid-template-columns:minmax(0,1fr);max-width:26rem;margin-inline:auto}}
+.flavor{display:grid;justify-items:center;text-align:center;gap:10px;min-width:0}
+.pedestal{position:relative;display:grid;place-items:end center;width:100%;max-width:300px;height:310px;margin-bottom:8px}
+.pedestal::before{content:"";position:absolute;left:50%;bottom:0;width:min(250px,86%);aspect-ratio:1;transform:translateX(-50%);border-radius:50%;background:var(--disc)}
+.pedestal .can-shade{position:relative;margin-bottom:34px}
+.pedestal .mini-can{cursor:pointer}
+.flavor h3{font-size:2.3rem;color:var(--ink)}
+.flavor p{color:var(--ink-soft);max-width:22rem}
+.specs{display:flex;gap:28px;margin:8px 0 0;font-variant-numeric:tabular-nums}
+.specs div{display:grid;gap:2px}
+.specs dt{font-weight:800;font-stretch:80%;text-transform:uppercase;letter-spacing:.12em;font-size:.72rem;color:var(--emerald)}
+.specs dd{margin:0;font-weight:800;font-size:1.3rem;color:var(--ink)}
+
+/* Process */
+.steps-wrap{position:relative}
+.track{height:4px;border-radius:4px;background:var(--chip-bg);box-shadow:inset 0 0 0 1px var(--emerald);margin-bottom:36px;overflow:hidden}
+.fill-line{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--lime),var(--lemon));transform-origin:left center}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(22px,3vw,40px);list-style:none;margin:0;padding:0}
+@media (max-width:900px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.steps{grid-template-columns:minmax(0,1fr)}}
+.step{display:grid;gap:10px;align-content:start;min-width:0}
+.step-num{font-family:var(--font-display);font-size:3.2rem;line-height:1;color:var(--lemon)}
+.step h3{font-family:var(--font-body);font-weight:900;font-stretch:90%;font-size:1.35rem;line-height:1.2;color:var(--foam)}
+.step p{color:var(--foam-soft)}
+
+/* Nutrition */
+.nutri-grid{display:grid;grid-template-columns:minmax(0,22rem) minmax(0,1fr);gap:clamp(40px,7vw,104px);align-items:start}
+@media (max-width:860px){.nutri-grid{grid-template-columns:minmax(0,1fr)}}
+.facts{background:var(--paper);color:var(--paper-ink);border:2px solid var(--paper-ink);padding:8px 12px 12px;font-size:.95rem;line-height:1.3;box-shadow:12px 12px 0 var(--lime);max-width:22rem;font-variant-numeric:tabular-nums}
+.facts h3{font-family:var(--font-body);font-weight:900;font-stretch:68%;font-size:2.7rem;line-height:1;margin:0 0 2px}
+.facts .row{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--paper-ink);padding-block:3px}
+.facts .row.first{border-top:0}
+.facts .xl{border-top:10px solid var(--paper-ink)}
+.facts .md{border-top:5px solid var(--paper-ink)}
+.facts .cal{font-weight:900;font-stretch:80%;font-size:2.1rem;line-height:1.1;align-items:end}
+.facts .cal span:first-child{font-size:1.5rem}
+.facts .dv{justify-content:flex-end;font-weight:800;font-size:.85rem}
+.facts .in1{padding-left:16px}
+.facts .in2{padding-left:32px}
+.facts b{font-weight:900}
+.facts small{display:block;font-size:.74rem;line-height:1.35;padding-top:6px;border-top:1px solid var(--paper-ink)}
+.inside{display:grid;gap:18px;min-width:0}
+.inside h2{font-size:clamp(2.6rem,5.4vw,4.4rem)}
+.ingredients{max-width:36rem;color:var(--ink)}
+.ingredients strong{font-weight:900}
+.inside dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 32px;margin:24px 0 0}
+.inside dl div{border-top:3px solid var(--ink);padding-top:12px;display:grid;gap:4px;min-width:0}
+.inside dt{font-weight:800;font-stretch:80%;text-transform:uppercase;letter-spacing:.12em;font-size:.76rem;color:var(--emerald)}
+.inside dd{margin:0;font-family:var(--font-display);font-size:clamp(2rem,4vw,2.8rem);line-height:1.05;color:var(--emerald)}
+.inside dd small{display:block;font-family:var(--font-body);font-size:.95rem;font-weight:500;color:var(--ink-soft);margin-top:6px;line-height:1.4}
+
+/* Last call */
+.cta-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);align-items:center;gap:40px}
+.cta h2{font-size:clamp(3rem,8vw,7rem);color:var(--deep);margin-top:12px}
+.cta .lede{margin-top:18px}
+.cta-can{justify-self:center;background:none;border:0;padding:0;cursor:pointer;filter:drop-shadow(0 26px 22px var(--shadow-deep));animation:bob 4s ease-in-out infinite}
+.cta-can .mini-can{--h:clamp(260px,34vw,400px)}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(8deg)}50%{transform:translateY(-16px) rotate(5deg)}}
+@media (max-width:760px){.cta-grid{grid-template-columns:minmax(0,1fr)}.cta-can .mini-can{--h:260px}}
+
+/* Footer */
+.footer{background:var(--deep);color:var(--foam-soft);padding-block:48px calc(40px + env(safe-area-inset-bottom,0px))}
+.foot-grid{display:flex;flex-wrap:wrap;align-items:center;gap:20px 36px}
+.foot-grid nav{display:flex;flex-wrap:wrap;gap:22px}
+.foot-grid nav a{text-decoration:none;font-weight:700}
+.foot-grid nav a:hover{color:var(--lemon)}
+.foot-grid p{margin-left:auto;font-size:.9rem}
+@media (max-width:640px){.foot-grid p{margin-left:0;width:100%}}
+
+/* Crack burst */
+.burst-layer{position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden}
+.pop{position:absolute;left:0;top:0;width:var(--d);height:var(--d);margin:calc(var(--d) / -2) 0 0 calc(var(--d) / -2);border-radius:50%;border:2px solid var(--lime);background:radial-gradient(circle at 32% 30%, var(--foam) 0 14%, transparent 16%)}
+.psst{position:absolute;left:0;top:0;font-family:var(--font-display);font-size:2.2rem;line-height:1;color:var(--lemon);-webkit-text-stroke:6px var(--deep);paint-order:stroke fill;white-space:nowrap}
+
+@media (prefers-reduced-motion: reduce){
+  .cta-can{animation:none;transform:rotate(6deg)}
+  .scroll-hint i{animation:none}
+}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top" aria-label="Sprunk, back to top">Sprunk</a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#flavors">Flavors</a>
+      <a href="#made">How it's made</a>
+      <a href="#nutrition">Nutrition</a>
+    </nav>
+    <button class="btn btn-lemon btn-sm js-crack" type="button">Crack a can</button>
+  </div>
+</header>
+
+<main id="top">
+  <section class="stage" id="stage" aria-label="Meet Sprunk">
+    <canvas class="fizz" id="fizz" aria-hidden="true"></canvas>
+    <div class="mega" aria-hidden="true"><span>Sprunk</span></div>
+    <div class="slices" id="slices" aria-hidden="true"></div>
+    <div class="can-wrap" id="canWrap" aria-hidden="true">
+      <canvas id="can3d"></canvas>
+      <div class="can-fallback" id="canFallback" hidden><div class="mini-can"><div class="label" data-flavor="original"></div></div></div>
+    </div>
+    <div class="stage-panels">
+      <div class="panel p1">
+        <p class="eyebrow">Lemon-lime soda · 12 fl oz can</p>
+        <h1>Crack it cold.</h1>
+        <p class="lede">Sprunk is lemon-lime soda made with real citrus juice and cane sugar, then carbonated hard so the first sip snaps.</p>
+        <div class="actions">
+          <button class="btn btn-lemon js-crack" type="button">Crack a can</button>
+          <a class="btn btn-line" href="#flavors">See the flavors</a>
+        </div>
+      </div>
+      <div class="panel p2">
+        <p class="eyebrow">Squeezed, never faked</p>
+        <h2>Real lemon. Real lime.</h2>
+        <p class="lede">Every can holds 5% juice pressed from Eureka lemons and Persian limes. No artificial flavors and no added color.</p>
+        <ul class="chips"><li>5% citrus juice</li><li>Cane sugar</li><li>No added color</li></ul>
+      </div>
+      <div class="panel p3">
+        <p class="eyebrow">3.6 volumes of CO<sub>2</sub></p>
+        <h2>Fizz with a bite.</h2>
+        <p class="lede">We chill the blend to 1 °C and charge it to 3.6 volumes of carbonation, so it still sparkles at the bottom of the can.</p>
+        <ul class="chips"><li>3.6 vol CO<sub>2</sub></li><li>Best at 3 °C</li><li>150 cal</li></ul>
+      </div>
+    </div>
+    <div class="scroll-hint" aria-hidden="true"><span>Scroll to pour</span><i></i></div>
+  </section>
+
+  <div class="ticker-zone" aria-hidden="true"><div class="ticker">
+    <div class="ticker-skew">
+      <div class="ticker-track">
+        <span>Crack it cold</span><span>Lemon</span><span>Lime</span><span>Hard fizz</span><span>Real juice</span><span>Best at 3 °C</span>
+        <span>Crack it cold</span><span>Lemon</span><span>Lime</span><span>Hard fizz</span><span>Real juice</span><span>Best at 3 °C</span>
+      </div>
+    </div>
+  </div></div>
+
+  <section class="band band-ice" id="flavors">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Three cans, one cold snap</p>
+        <h2>Pick your fizz.</h2>
+        <p class="lede">Every flavor comes in 12 fl oz cans and 8-packs. Hover a can to give it a spin.</p>
+      </div>
+      <div class="flavor-grid">
+        <article class="flavor" style="--disc:var(--disc-original)">
+          <div class="pedestal"><div class="can-shade"><div class="mini-can"><div class="label" data-flavor="original"></div></div></div></div>
+          <h3>Original</h3>
+          <p>Lemon and lime juice, cane sugar and a sharp, fine fizz.</p>
+          <dl class="specs"><div><dt>Calories</dt><dd>150</dd></div><div><dt>Sugar</dt><dd>36 g</dd></div></dl>
+        </article>
+        <article class="flavor" style="--disc:var(--disc-zero)">
+          <div class="pedestal"><div class="can-shade"><div class="mini-can"><div class="label" data-flavor="zero"></div></div></div></div>
+          <h3>Zero Sugar</h3>
+          <p>The same citrus snap, sweetened with stevia leaf instead of sugar.</p>
+          <dl class="specs"><div><dt>Calories</dt><dd>0</dd></div><div><dt>Sugar</dt><dd>0 g</dd></div></dl>
+        </article>
+        <article class="flavor" style="--disc:var(--disc-ginger)">
+          <div class="pedestal"><div class="can-shade"><div class="mini-can"><div class="label" data-flavor="ginger"></div></div></div></div>
+          <h3>Ginger Lime</h3>
+          <p>Persian lime up front with a warm ginger finish.</p>
+          <dl class="specs"><div><dt>Calories</dt><dd>130</dd></div><div><dt>Sugar</dt><dd>31 g</dd></div></dl>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band-deep" id="made">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">From fruit to fizz</p>
+        <h2>How a can of Sprunk gets made.</h2>
+      </div>
+      <div class="steps-wrap">
+        <div class="track" aria-hidden="true"><div class="fill-line"></div></div>
+        <ol class="steps">
+          <li class="step"><span class="step-num">1</span><h3>Press</h3><p>Lemons and limes are pressed within a day of picking, so the juice stays bright.</p></li>
+          <li class="step"><span class="step-num">2</span><h3>Blend</h3><p>The juice is mixed with cane sugar, citric acid and filtered water.</p></li>
+          <li class="step"><span class="step-num">3</span><h3>Chill</h3><p>The blend is cooled to 1 °C, because cold liquid holds more CO<sub>2</sub>.</p></li>
+          <li class="step"><span class="step-num">4</span><h3>Carbonate and seal</h3><p>We charge it to 3.6 volumes of CO<sub>2</sub> and seal the can in under a second.</p></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band-ice" id="nutrition">
+    <div class="wrap nutri-grid">
+      <div class="facts" role="group" aria-label="Nutrition facts for Sprunk Original">
+        <h3>Nutrition Facts</h3>
+        <div class="row first">1 serving per container</div>
+        <div class="row"><b>Serving size</b><b>1 can (355 mL)</b></div>
+        <div class="row xl cal"><span>Calories</span><span>150</span></div>
+        <div class="row md dv">% Daily Value*</div>
+        <div class="row"><span><b>Total Fat</b> 0g</span><b>0%</b></div>
+        <div class="row"><span><b>Sodium</b> 45mg</span><b>2%</b></div>
+        <div class="row"><span><b>Total Carbohydrate</b> 37g</span><b>13%</b></div>
+        <div class="row in1"><span>Total Sugars 36g</span></div>
+        <div class="row in2"><span>Includes 35g Added Sugars</span><b>70%</b></div>
+        <div class="row"><span><b>Protein</b> 0g</span></div>
+        <div class="row xl"><span>Not a significant source of saturated fat, trans fat, cholesterol, dietary fiber, vitamin D, calcium, iron and potassium.</span></div>
+        <small>* The % Daily Value tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice.</small>
+      </div>
+      <div class="inside">
+        <p class="eyebrow">Original, per can</p>
+        <h2>What's in the can.</h2>
+        <p class="lede">Seven ingredients, and you can pronounce all of them.</p>
+        <p class="ingredients"><strong>Ingredients:</strong> carbonated water, cane sugar, lemon juice concentrate, lime juice concentrate, citric acid, natural lemon and lime flavors, sodium citrate.</p>
+        <dl>
+          <div><dt>Juice</dt><dd>5%<small>Pressed lemon and lime</small></dd></div>
+          <div><dt>Carbonation</dt><dd>3.6 vol<small>Volumes of CO<sub>2</sub> per can</small></dd></div>
+          <div><dt>Serve at</dt><dd>3 °C<small>38 °F, straight from the fridge</small></dd></div>
+          <div><dt>Can</dt><dd>355 mL<small>Recyclable aluminum</small></dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band-lemon cta" id="crack">
+    <div class="wrap cta-grid">
+      <div>
+        <p class="eyebrow">Last call</p>
+        <h2>Crack one open.</h2>
+        <p class="lede">Tap the can or the button. You know the sound.</p>
+        <div class="actions"><button class="btn btn-ink js-crack" type="button">Crack a can</button></div>
+      </div>
+      <button class="cta-can js-crack" type="button" aria-label="Crack the can"><span class="mini-can"><span class="label" data-flavor="original"></span></span></button>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap foot-grid">
+    <span class="brand">Sprunk</span>
+    <nav aria-label="Footer">
+      <a href="#flavors">Flavors</a>
+      <a href="#made">How it's made</a>
+      <a href="#nutrition">Nutrition</a>
+    </nav>
+    <p>© 2026 Sprunk. Please recycle this can.</p>
+  </div>
+</footer>
+
+<div class="burst-layer" aria-hidden="true"></div>
+
+<script>
+(function () {
+  "use strict";
+  var root = document.documentElement;
+  var motion = root.classList.contains("motion");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var hasGsap = !!(window.gsap && window.ScrollTrigger);
+  var stage = document.getElementById("stage");
+
+  var S = window.SPRUNK = {
+    motion: motion,
+    reduce: reduce,
+    state: { fx: 0.42, rotY: 0, rotZ: -0.14, scale: 1 },
+    mouse: { x: 0, y: 0 },
+    fizz: { speed: 1 },
+    shake: 0,
+    stageVisible: true,
+    canScreen: null,
+    ready3d: false
+  };
+
+  /* ---------- Can label art (drawn, so every flavor shares one system) ---------- */
+  var PALETTES = {
+    original: { base1: "#18A85D", base2: "#06572F", band1: "#FFE14A", band2: "#A6E34F", word: "#FFFFFF", outline: "#04331F", shadow: "#FFE14A", text: "#F4FFF6", tag: "REAL CITRUS · HARD FIZZ" },
+    zero:     { base1: "#F7FAF8", base2: "#C6D4CC", band1: "#0B6B3D", band2: "#A6E34F", word: "#0B6B3D", outline: "#FFFFFF", shadow: "#A6E34F", text: "#06291A", flavor: "ZERO SUGAR", pillBg: "#0B6B3D", pillText: "#FFFFFF" },
+    ginger:   { base1: "#F7B24C", base2: "#BF5A14", band1: "#A6E34F", band2: "#FFF1B8", word: "#FFFFFF", outline: "#4A1F05", shadow: "#A6E34F", text: "#FFF8EA", flavor: "GINGER LIME", pillBg: "#4A1F05", pillText: "#FFE14A" }
+  };
+  S.PALETTES = PALETTES;
+
+  function rng(seed) {
+    return function () {
+      seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function hexA(hex, a) {
+    var n = parseInt(hex.slice(1), 16);
+    return "rgba(" + ((n >> 16) & 255) + "," + ((n >> 8) & 255) + "," + (n & 255) + "," + a + ")";
+  }
+  function spaced(x, px) { if ("letterSpacing" in x) x.letterSpacing = px + "px"; }
+
+  function ribbon(x, W, H, color, yc, amp, k, phase, thick) {
+    x.beginPath();
+    for (var i = 0; i <= W; i += 8) {
+      var y = H * (yc + amp * Math.sin((2 * Math.PI * k * i) / W + phase));
+      if (i === 0) x.moveTo(i, y); else x.lineTo(i, y);
+    }
+    for (var j = W; j >= 0; j -= 8) {
+      var y2 = H * (yc + thick + amp * 0.6 * Math.sin((2 * Math.PI * k * j) / W + phase + 0.5));
+      x.lineTo(j, y2);
+    }
+    x.closePath(); x.fillStyle = color; x.fill();
+  }
+
+  function slice(x, cx, cy, r, rind, pith, flesh, segs) {
+    x.save(); x.translate(cx, cy);
+    x.fillStyle = rind; x.beginPath(); x.arc(0, 0, r, 0, Math.PI * 2); x.fill();
+    x.fillStyle = pith; x.beginPath(); x.arc(0, 0, r * 0.88, 0, Math.PI * 2); x.fill();
+    x.fillStyle = flesh;
+    for (var i = 0; i < segs; i++) {
+      var a0 = (i / segs) * Math.PI * 2 + 0.06, a1 = ((i + 1) / segs) * Math.PI * 2 - 0.06, am = (a0 + a1) / 2;
+      x.beginPath(); x.moveTo(Math.cos(am) * r * 0.08, Math.sin(am) * r * 0.08);
+      x.arc(0, 0, r * 0.8, a0, a1); x.closePath(); x.fill();
+    }
+    x.restore();
+  }
+
+  function badge(x, cx, cy, r, pal, top, big, u) {
+    x.save();
+    x.strokeStyle = pal.text; x.fillStyle = pal.text; x.lineWidth = 4 * u;
+    x.beginPath(); x.arc(cx, cy, r, 0, Math.PI * 2); x.stroke();
+    x.setLineDash([2 * u, 9 * u]); x.lineWidth = 3 * u;
+    x.beginPath(); x.arc(cx, cy, r - 13 * u, 0, Math.PI * 2); x.stroke(); x.setLineDash([]);
+    x.textAlign = "center"; x.textBaseline = "middle";
+    x.font = "800 " + 17 * u + "px Archivo"; spaced(x, 3 * u); x.fillText(top, cx, cy - 30 * u);
+    x.font = 46 * u + "px Shrikhand"; spaced(x, 0); x.fillText(big, cx, cy + 14 * u);
+    x.restore();
+  }
+
+  function factsBox(x, cx, top, w, h, u) {
+    var l = cx - w / 2;
+    x.save();
+    x.fillStyle = "#FFFFFF"; x.fillRect(l, top, w, h);
+    x.fillStyle = "#111111"; x.textBaseline = "top"; spaced(x, 0);
+    var pad = l + 14 * u, right = l + w - 14 * u, y = top + 12 * u;
+    x.font = "900 " + 25 * u + "px Archivo"; x.textAlign = "left"; x.fillText("Nutrition Facts", pad, y); y += 32 * u;
+    x.fillRect(pad, y, w - 28 * u, 8 * u); y += 14 * u;
+    var rows = [["Calories", "150", 1], ["Total Fat", "0g"], ["Sodium", "45mg"], ["Total Carb.", "37g"], ["Total Sugars", "36g"], ["Protein", "0g"]];
+    rows.forEach(function (r) {
+      x.font = (r[2] ? "900 " + 24 : "600 " + 16) * u + "px Archivo";
+      x.textAlign = "left"; x.fillText(r[0], pad, y);
+      x.textAlign = "right"; x.fillText(r[1], right, y);
+      y += (r[2] ? 32 : 24) * u;
+      x.fillRect(pad, y - 5 * u, w - 28 * u, r[2] ? 5 * u : 1.5 * u);
+    });
+    x.font = "600 " + 12 * u + "px Archivo"; x.textAlign = "left";
+    var words = "INGREDIENTS: CARBONATED WATER, CANE SUGAR, LEMON JUICE CONCENTRATE, LIME JUICE CONCENTRATE, CITRIC ACID, NATURAL FLAVORS, SODIUM CITRATE.".split(" ");
+    var line = "", maxW = w - 28 * u; y += 4 * u;
+    words.forEach(function (wd) {
+      var test = line ? line + " " + wd : wd;
+      if (x.measureText(test).width > maxW) { x.fillText(line, pad, y); y += 15 * u; line = wd; } else line = test;
+    });
+    if (line) x.fillText(line, pad, y);
+    x.restore();
+  }
+
+  function barcode(x, cx, top, w, h, u, R) {
+    var l = cx - w / 2;
+    x.save();
+    x.fillStyle = "#FFFFFF"; x.fillRect(l, top, w, h);
+    x.fillStyle = "#111111";
+    var px = l + 12 * u, end = l + w - 12 * u;
+    while (px < end) {
+      var bw = Math.min((1 + Math.floor(R() * 4)) * 2.2 * u, end - px);
+      x.fillRect(px, top + 10 * u, bw, h - 40 * u);
+      px += bw + (1 + Math.floor(R() * 3)) * 2.2 * u;
+    }
+    x.font = "600 " + 17 * u + "px Archivo"; x.textAlign = "center"; x.textBaseline = "bottom"; spaced(x, 3 * u);
+    x.fillText("0 84261 07355 2", cx, top + h - 6 * u);
+    x.restore();
+  }
+
+  function drawLabel(pal, W, H) {
+    var c = document.createElement("canvas"); c.width = W; c.height = H;
+    var x = c.getContext("2d"), R = rng(11), u = H / 1024, cx = W / 2, i, o;
+    var g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, pal.base1); g.addColorStop(1, pal.base2);
+    x.fillStyle = g; x.fillRect(0, 0, W, H);
+
+    x.lineWidth = 3 * u;
+    for (i = 0; i < 150; i++) {
+      var bx = R() * W, by = (0.04 + R() * 0.56) * H, br = (5 + R() * 22) * u;
+      x.strokeStyle = hexA(pal.text, 0.1 + R() * 0.2);
+      for (o = -1; o <= 1; o++) { x.beginPath(); x.arc(bx + o * W, by, br, 0, Math.PI * 2); x.stroke(); }
+    }
+    ribbon(x, W, H, pal.band2, 0.655, 0.032, 2, 0.6, 0.07);
+    ribbon(x, W, H, pal.band1, 0.735, 0.042, 2, 2.2, 0.115);
+
+    x.textAlign = "center"; x.textBaseline = "middle"; x.fillStyle = pal.text;
+    x.font = "800 " + 40 * u + "px Archivo"; spaced(x, 14 * u);
+    x.fillText("LEMON · LIME SODA", cx, H * 0.13);
+
+    x.save(); x.translate(cx, H * 0.37); x.rotate(-0.11); spaced(x, 0);
+    var fs = 250 * u; x.font = fs + "px Shrikhand";
+    var mw = x.measureText("Sprunk").width, maxW = W * 0.34;
+    if (mw > maxW) { fs *= maxW / mw; x.font = fs + "px Shrikhand"; }
+    x.lineJoin = "round";
+    x.lineWidth = fs * 0.09; x.strokeStyle = pal.shadow; x.strokeText("Sprunk", fs * 0.035, fs * 0.06);
+    x.fillStyle = pal.shadow; x.fillText("Sprunk", fs * 0.035, fs * 0.06);
+    x.strokeStyle = pal.outline; x.strokeText("Sprunk", 0, 0);
+    x.fillStyle = pal.word; x.fillText("Sprunk", 0, 0);
+    x.restore();
+
+    slice(x, cx + W * 0.158, H * 0.165, 60 * u, "#3E9B2F", "#EAF8CC", "#A6E34F", 9);
+
+    if (pal.flavor) {
+      x.font = "900 " + 36 * u + "px Archivo"; spaced(x, 8 * u);
+      var pw = x.measureText(pal.flavor).width + 60 * u, ph = 62 * u, py = H * 0.555;
+      x.fillStyle = pal.pillBg; x.beginPath();
+      if (x.roundRect) x.roundRect(cx - pw / 2, py - ph / 2, pw, ph, ph / 2); else x.rect(cx - pw / 2, py - ph / 2, pw, ph);
+      x.fill(); x.fillStyle = pal.pillText; x.fillText(pal.flavor, cx, py + 2 * u);
+    } else {
+      x.font = "800 " + 32 * u + "px Archivo"; spaced(x, 9 * u); x.fillStyle = pal.text;
+      x.fillText(pal.tag, cx, H * 0.56);
+    }
+
+    x.fillStyle = pal.text; x.font = "700 " + 32 * u + "px Archivo"; spaced(x, 6 * u);
+    x.fillText("12 FL OZ (355 mL)", cx, H * 0.945);
+
+    badge(x, W * 0.25, H * 0.36, 92 * u, pal, "SERVE AT", "3 °C", u);
+    badge(x, W * 0.75, H * 0.36, 92 * u, pal, "FIZZ LEVEL", "3.6 vol", u);
+    factsBox(x, W * 0.1, H * 0.1, W * 0.13, H * 0.5, u);
+    barcode(x, W * 0.9, H * 0.4, W * 0.085, H * 0.17, u, R);
+
+    x.fillStyle = pal.text; x.font = "800 " + 26 * u + "px Archivo"; spaced(x, 8 * u);
+    x.textAlign = "center"; x.textBaseline = "middle";
+    x.fillText("PLEASE RECYCLE", 0, H * 0.945); x.fillText("PLEASE RECYCLE", W, H * 0.945);
+    return c;
+  }
+  S.drawLabel = drawLabel;
+
+  S.drawDroplets = function (W, H) {
+    var c = document.createElement("canvas"); c.width = W; c.height = H;
+    var x = c.getContext("2d"), R = rng(5), k = W / 1024, i;
+    x.fillStyle = "#000"; x.fillRect(0, 0, W, H);
+    for (i = 0; i < 1500; i++) {
+      var px = R() * W, py = R() * H, r = (1.2 + R() * R() * 7) * k;
+      var g = x.createRadialGradient(px - r * 0.2, py - r * 0.3, 0, px, py, r * 1.2);
+      g.addColorStop(0, "rgba(255,255,255,1)"); g.addColorStop(0.7, "rgba(255,255,255,.5)"); g.addColorStop(1, "rgba(255,255,255,0)");
+      x.fillStyle = g; x.beginPath(); x.ellipse(px, py, r, r * 1.25, 0, 0, Math.PI * 2); x.fill();
+    }
+    for (i = 0; i < 26; i++) {
+      var dx = R() * W, dy = R() * H * 0.7, dh = (40 + R() * 120) * k, dw = (2 + R() * 2.5) * k;
+      var lg = x.createLinearGradient(0, dy, 0, dy + dh);
+      lg.addColorStop(0, "rgba(255,255,255,0)"); lg.addColorStop(1, "rgba(255,255,255,.85)");
+      x.fillStyle = lg; x.fillRect(dx, dy, dw, dh);
+      x.beginPath(); x.arc(dx + dw / 2, dy + dh, dw * 1.3, 0, Math.PI * 2); x.fillStyle = "rgba(255,255,255,.9)"; x.fill();
+    }
+    return c;
+  };
+
+  function paintMiniLabels() {
+    var cache = {};
+    document.querySelectorAll(".mini-can .label[data-flavor]").forEach(function (el) {
+      var k = el.getAttribute("data-flavor");
+      if (!PALETTES[k]) return;
+      if (!cache[k]) cache[k] = drawLabel(PALETTES[k], 1024, 512).toDataURL("image/jpeg", 0.9);
+      el.style.setProperty("--label", "url(" + cache[k] + ")");
+    });
+  }
+
+  var fontLoads = [];
+  try {
+    fontLoads = ["64px Shrikhand", "600 32px Archivo", "800 32px Archivo", "900 32px Archivo"].map(function (f) { return document.fonts.load(f); });
+  } catch (e) {}
+  S.fontsReady = Promise.race([
+    Promise.all(fontLoads),
+    new Promise(function (r) { setTimeout(r, 3000); })
+  ]).catch(function () {});
+  S.fontsReady.then(function () {
+    paintMiniLabels();
+    if (hasGsap) ScrollTrigger.refresh();
+  });
+
+  /* ---------- Floating citrus ---------- */
+  function sliceSVG(kind) {
+    var lime = kind === "lime";
+    var rind = lime ? "var(--lime-rind)" : "var(--lemon)";
+    var pith = lime ? "var(--lime-pith)" : "var(--pith)";
+    var flesh = lime ? "var(--lime)" : "var(--lemon-flesh)";
+    var segs = lime ? 9 : 10, p = "", r = 38, r0 = 4;
+    for (var i = 0; i < segs; i++) {
+      var a0 = (i / segs) * 2 * Math.PI + 0.07, a1 = ((i + 1) / segs) * 2 * Math.PI - 0.07, am = (a0 + a1) / 2;
+      p += '<path d="M' + (Math.cos(am) * r0).toFixed(2) + " " + (Math.sin(am) * r0).toFixed(2) +
+        " L" + (Math.cos(a0) * r).toFixed(2) + " " + (Math.sin(a0) * r).toFixed(2) +
+        " A" + r + " " + r + " 0 0 1 " + (Math.cos(a1) * r).toFixed(2) + " " + (Math.sin(a1) * r).toFixed(2) +
+        ' Z" style="fill:' + flesh + '"/>';
+    }
+    return '<svg viewBox="-50 -50 100 100" focusable="false"><circle r="49" style="fill:' + rind + '"/><circle r="44" style="fill:' + pith + '"/>' + p +
+      '<path d="M-31 -16 A35 35 0 0 1 -12 -33" style="fill:none;stroke:var(--foam);stroke-opacity:.6;stroke-width:3;stroke-linecap:round"/></svg>';
+  }
+  var SLICES = [
+    { k: "lemon", l: 43, t: 12, s: 116, d: 1.3, r: -20, lsm: 6, tsm: 14 },
+    { k: "lime",  l: 84, t: 66, s: 156, d: 1.7, r: 30, lsm: 80, tsm: 42 },
+    { k: "lemon", l: 3,  t: 80, s: 84,  d: 0.7, r: 10, soft: true, hideSm: true },
+    { k: "lime",  l: 58, t: 84, s: 68,  d: 0.5, r: -40, soft: true, hideSm: true },
+    { k: "lemon", l: 89, t: 20, s: 90,  d: 0.9, r: 50, hideSm: true }
+  ];
+  var sliceHost = document.getElementById("slices");
+  var sliceEls = SLICES.map(function (d) {
+    var w = document.createElement("div");
+    w.className = "slice-wrap" + (d.soft ? " soft" : "") + (d.hideSm ? " hide-sm" : "");
+    w.style.cssText = "--l:" + d.l + "%;--t:" + d.t + "%;--lsm:" + (d.lsm == null ? d.l : d.lsm) + "%;--tsm:" + (d.tsm == null ? d.t : d.tsm) + "%;--s0:" + d.s + "px;--s:" + d.s + "px;transform:rotate(" + d.r + "deg)";
+    w.innerHTML = sliceSVG(d.k);
+    sliceHost.appendChild(w);
+    return { wrap: w, svg: w.firstChild, d: d };
+  });
+
+  /* ---------- Fizz ---------- */
+  var fz = document.getElementById("fizz"), fctx = fz.getContext("2d");
+  var fw = 0, fh = 0, bubbles = [];
+  var foam = getComputedStyle(root).getPropertyValue("--foam").trim() || "#F4FFF6";
+  function spawn(x, y, fast) {
+    if (bubbles.length > 700) return;
+    bubbles.push({
+      x: x, y: y,
+      r: fast ? 2 + Math.random() * 7 : 1.2 + Math.random() * 4.5,
+      vy: fast ? 3 + Math.random() * 7 : 0.35 + Math.random() * 1,
+      vx: fast ? (Math.random() - 0.5) * 6 : 0,
+      ph: Math.random() * 6.28, wob: 0.2 + Math.random() * 0.9, a: 0.2 + Math.random() * 0.5
+    });
+  }
+  function drawBubble(b) {
+    fctx.globalAlpha = b.a; fctx.strokeStyle = foam; fctx.lineWidth = 1.2;
+    fctx.beginPath(); fctx.arc(b.x, b.y, b.r, 0, 6.283); fctx.stroke();
+    fctx.fillStyle = foam; fctx.beginPath(); fctx.arc(b.x - b.r * 0.35, b.y - b.r * 0.35, Math.max(0.6, b.r * 0.22), 0, 6.283); fctx.fill();
+  }
+  function sizeFizz() {
+    var r = fz.getBoundingClientRect(), d = Math.min(window.devicePixelRatio || 1, 1.5);
+    fw = r.width; fh = r.height;
+    fz.width = Math.round(fw * d); fz.height = Math.round(fh * d);
+    fctx.setTransform(d, 0, 0, d, 0, 0);
+    if (reduce) {
+      bubbles = [];
+      for (var i = 0; i < 140; i++) spawn(Math.random() * fw, Math.random() * fh, false);
+      fctx.clearRect(0, 0, fw, fh); bubbles.forEach(drawBubble); fctx.globalAlpha = 1;
+    }
+  }
+  function stepFizz() {
+    if (reduce || !S.stageVisible || !fw) return;
+    var n = 0.8 * S.fizz.speed;
+    while (n > 0) { if (Math.random() < n) spawn(Math.random() * fw, fh + 8, false); n -= 1; }
+    fctx.clearRect(0, 0, fw, fh);
+    var sp = 0.6 + 0.4 * S.fizz.speed, keep = [];
+    for (var i = 0; i < bubbles.length; i++) {
+      var b = bubbles[i];
+      b.ph += 0.06; b.y -= b.vy * sp; b.x += Math.sin(b.ph) * b.wob + b.vx; b.vx *= 0.95;
+      if (b.vy > 1.6) b.vy *= 0.992;
+      if (b.y > -20) { keep.push(b); drawBubble(b); }
+    }
+    bubbles = keep; fctx.globalAlpha = 1;
+  }
+  sizeFizz();
+  if (!reduce) for (var bi = 0; bi < 110; bi++) spawn(Math.random() * fw, Math.random() * fh, false);
+  window.addEventListener("resize", sizeFizz);
+  if (hasGsap) gsap.ticker.add(stepFizz);
+  else (function loop() { stepFizz(); requestAnimationFrame(loop); })();
+
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (es) { S.stageVisible = es[0].isIntersecting; }, { rootMargin: "120px" }).observe(stage);
+  }
+
+  /* ---------- Mouse parallax ---------- */
+  var sliceMovers = hasGsap ? sliceEls.map(function (s) {
+    return { x: gsap.quickTo(s.svg, "x", { duration: 0.8, ease: "power3" }), y: gsap.quickTo(s.svg, "y", { duration: 0.8, ease: "power3" }), d: s.d.d };
+  }) : [];
+  function moveSlices() {
+    if (reduce) return;
+    sliceMovers.forEach(function (m) { m.x(-S.mouse.x * 26 * m.d); m.y(-S.mouse.y * 18 * m.d); });
+  }
+  stage.addEventListener("pointermove", function (e) {
+    if (e.pointerType !== "mouse") return;
+    var r = stage.getBoundingClientRect();
+    S.mouse.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+    S.mouse.y = ((e.clientY - r.top) / r.height) * 2 - 1;
+    moveSlices();
+  });
+  stage.addEventListener("pointerleave", function () { S.mouse.x = 0; S.mouse.y = 0; moveSlices(); });
+
+  /* ---------- Fallback can (no WebGL) ---------- */
+  S.useFallback = function () {
+    if (S.fallbackOn || S.ready3d) return;
+    S.fallbackOn = true;
+    var fb = document.getElementById("canFallback"), wrap = document.getElementById("canWrap");
+    var label = fb.querySelector(".label");
+    fb.hidden = false;
+    function apply() {
+      if (S.ready3d) return;
+      var w = wrap.clientWidth, h = wrap.clientHeight, narrow = window.matchMedia("(max-width: 760px)").matches;
+      var fx = motion && !narrow ? S.state.fx : 0;
+      var fy = motion && narrow ? -0.17 : 0;
+      var sh = S.shake; S.shake *= 0.93;
+      var sc = (motion && narrow ? 0.62 : 1) * S.state.scale, t = Date.now();
+      fb.style.transform = "translate(-50%,-50%) translate(" + (fx * w / 2 + Math.sin(t / 26) * 6 * sh) + "px," + fy * h + "px) rotate(" + (S.state.rotZ + Math.sin(t / 30) * 0.12 * sh) + "rad) scale(" + sc + ")";
+      label.style.setProperty("--spin", ((S.state.rotY / (2 * Math.PI)) % 1).toFixed(4));
+      S.canScreen = { x: w / 2 + fx * w / 2 + wrap.offsetLeft, y: h / 2 + fy * h - fb.offsetHeight * sc / 2 + wrap.offsetTop, w: fb.offsetWidth * sc * 0.6 };
+    }
+    if (hasGsap) gsap.ticker.add(apply); else apply();
+  };
+  setTimeout(function () { if (!S.ready3d) S.useFallback(); }, 7000);
+
+  /* ---------- Crack a can ---------- */
+  var layer = document.querySelector(".burst-layer");
+  function crack(e) {
+    S.shake = 1;
+    var el = e.currentTarget, r = el.getBoundingClientRect();
+    var x = r.left + r.width / 2, y = r.top + (el.classList.contains("cta-can") ? r.height * 0.08 : 0);
+    if (!reduce && S.stageVisible && S.canScreen) {
+      for (var i = 0; i < 120; i++) spawn(S.canScreen.x + (Math.random() - 0.5) * S.canScreen.w, S.canScreen.y + Math.random() * 12, true);
+    }
+    if (!hasGsap) return;
+    var ps = document.createElement("span"); ps.className = "psst"; ps.textContent = "Psssht."; layer.appendChild(ps);
+    if (reduce) {
+      gsap.fromTo(ps, { x: x, y: y - 14, xPercent: -50, yPercent: -100, opacity: 0 }, { opacity: 1, duration: 0.2, yoyo: true, repeat: 1, repeatDelay: 0.9, onComplete: function () { ps.remove(); } });
+      return;
+    }
+    gsap.fromTo(ps, { x: x, y: y, xPercent: -50, yPercent: -100, scale: 0.3, rotation: -12 }, { y: y - 70, scale: 1, rotation: -4, duration: 0.5, ease: "back.out(3)" });
+    gsap.to(ps, { opacity: 0, y: y - 120, duration: 0.5, delay: 0.8, ease: "power1.in", onComplete: function () { ps.remove(); } });
+    for (var j = 0; j < 26; j++) {
+      var b = document.createElement("span"); b.className = "pop";
+      b.style.setProperty("--d", (6 + Math.random() * 18).toFixed(1) + "px");
+      layer.appendChild(b);
+      var ang = -Math.PI / 2 + (Math.random() - 0.5) * 1.9, dist = 80 + Math.random() * 220;
+      gsap.fromTo(b, { x: x, y: y, scale: 0.2, opacity: 1 }, {
+        x: x + Math.cos(ang) * dist, y: y + Math.sin(ang) * dist, scale: 1, opacity: 0,
+        duration: 0.8 + Math.random() * 0.7, ease: "power2.out",
+        onComplete: (function (n) { return function () { n.remove(); }; })(b)
+      });
+    }
+  }
+  document.querySelectorAll(".js-crack").forEach(function (b) { b.addEventListener("click", crack); });
+
+  /* ---------- Smooth scroll + anchors ---------- */
+  var lenis = null;
+  if (motion && window.Lenis) {
+    lenis = new Lenis({ lerp: 0.1 });
+    lenis.on("scroll", ScrollTrigger.update);
+    gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
+    gsap.ticker.lagSmoothing(0);
+  }
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      var id = a.getAttribute("href");
+      var target = id === "#top" ? 0 : document.querySelector(id);
+      if (target === null) return;
+      e.preventDefault();
+      if (lenis) lenis.scrollTo(target, { offset: id === "#top" ? 0 : -60, duration: 1.4 });
+      else if (id === "#top") window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+      else target.scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
+    });
+  });
+
+  var nav = document.getElementById("nav");
+  function navState() { nav.classList.toggle("is-solid", window.scrollY > 40); }
+  window.addEventListener("scroll", navState, { passive: true }); navState();
+
+  if (!hasGsap) return;
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ ignoreMobileResize: true });
+
+  /* ---------- Scroll story ---------- */
+  if (motion) {
+    var mm = gsap.matchMedia();
+    mm.add({ wide: "(min-width: 761px)", narrow: "(max-width: 760px)" }, function (ctx) {
+      var wide = ctx.conditions.wide, dx = wide ? 70 : 0, dy = wide ? 0 : 36;
+      gsap.set(S.state, { fx: 0.42, rotY: 0, rotZ: -0.14, scale: 1 });
+      gsap.set(S.fizz, { speed: 1 });
+      var tl = gsap.timeline({
+        defaults: { ease: "power1.inOut" },
+        scrollTrigger: { trigger: stage, start: "top top", end: "+=230%", pin: true, scrub: 0.9, anticipatePin: 1 }
+      });
+      tl.to(S.state, { fx: -0.42, rotY: Math.PI * 2, rotZ: 0.12, duration: 1 }, 0)
+        .to(".p1", { autoAlpha: 0, x: -dx, y: -dy, duration: 0.3, ease: "power1.in" }, 0.05)
+        .fromTo(".p2", { autoAlpha: 0, x: dx, y: dy }, { autoAlpha: 1, x: 0, y: 0, duration: 0.35, ease: "power2.out" }, 0.62)
+        .to(S.state, { fx: 0.42, rotY: Math.PI * 4, rotZ: -0.2, scale: 1.06, duration: 1 }, 1)
+        .to(S.fizz, { speed: 3.4, duration: 1 }, 1)
+        .to(".p2", { autoAlpha: 0, x: dx, y: -dy, duration: 0.3, ease: "power1.in" }, 1.05)
+        .fromTo(".p3", { autoAlpha: 0, x: -dx, y: dy }, { autoAlpha: 1, x: 0, y: 0, duration: 0.35, ease: "power2.out" }, 1.62)
+        .to(".mega span", { xPercent: -22, duration: 2.3, ease: "none" }, 0)
+        .to(".scroll-hint", { autoAlpha: 0, duration: 0.15 }, 0)
+        .to({}, { duration: 0.3 }, 2);
+      sliceEls.forEach(function (s) {
+        tl.to(s.wrap, { yPercent: -s.d.d * 70, rotation: s.d.r + s.d.d * 110, duration: 2.3, ease: "none" }, 0);
+      });
+    });
+  }
+
+  if (reduce) return;
+
+  /* ---------- Ticker ---------- */
+  var tick = gsap.to(".ticker-track", { xPercent: -50, repeat: -1, duration: 30, ease: "none" });
+  var skewTo = gsap.quickTo(".ticker-skew", "skewX", { duration: 0.4, ease: "power3" });
+  var settle;
+  ScrollTrigger.create({
+    onUpdate: function (self) {
+      var v = self.getVelocity();
+      skewTo(gsap.utils.clamp(-10, 10, v / -260));
+      tick.timeScale(1 + Math.min(Math.abs(v) / 700, 4));
+      clearTimeout(settle);
+      settle = setTimeout(function () { skewTo(0); gsap.to(tick, { timeScale: 1, duration: 0.8 }); }, 140);
+    }
+  });
+
+  /* ---------- Flavors ---------- */
+  var flavorST = { trigger: ".flavor-grid", start: "top 82%" };
+  gsap.from(".flavor", { y: 90, rotation: function (i) { return [-5, 0, 5][i] || 0; }, duration: 1.1, ease: "power3.out", stagger: 0.12, scrollTrigger: flavorST });
+  gsap.fromTo(".flavor .label", { "--spin": -1 }, { "--spin": 0, duration: 1.8, ease: "power3.out", stagger: 0.12, scrollTrigger: { trigger: ".flavor-grid", start: "top 82%" } });
+  document.querySelectorAll(".pedestal .mini-can, .cta-can .mini-can").forEach(function (can) {
+    var label = can.querySelector(".label");
+    can.addEventListener("pointerenter", function () {
+      gsap.fromTo(label, { "--spin": 0 }, { "--spin": 1, duration: 1.1, ease: "power2.inOut", overwrite: true });
+      gsap.to(can, { y: -10, rotation: -4, duration: 0.4, ease: "back.out(2)" });
+    });
+    can.addEventListener("pointerleave", function () { gsap.to(can, { y: 0, rotation: 0, duration: 0.5, ease: "power2.out" }); });
+  });
+
+  /* ---------- Process ---------- */
+  gsap.fromTo(".fill-line", { scaleX: 0 }, { scaleX: 1, ease: "none", scrollTrigger: { trigger: ".steps-wrap", start: "top 78%", end: "bottom 55%", scrub: true } });
+  gsap.from(".step", { y: 50, duration: 0.9, ease: "power3.out", stagger: 0.1, scrollTrigger: { trigger: ".steps-wrap", start: "top 82%" } });
+  gsap.from(".step-num", { scale: 0.45, rotation: -18, duration: 0.8, ease: "back.out(3)", stagger: 0.1, scrollTrigger: { trigger: ".steps-wrap", start: "top 82%" } });
+
+  /* ---------- Nutrition + last call ---------- */
+  gsap.from(".facts", { rotation: -4, y: 60, duration: 1, ease: "power3.out", scrollTrigger: { trigger: ".facts", start: "top 88%" } });
+  gsap.from(".inside dl > div", { y: 40, duration: 0.8, ease: "power3.out", stagger: 0.08, scrollTrigger: { trigger: ".inside dl", start: "top 88%" } });
+  gsap.from(".cta h2", { scale: 0.86, rotation: -3, transformOrigin: "left bottom", duration: 0.9, ease: "back.out(2)", scrollTrigger: { trigger: ".cta", start: "top 75%" } });
+})();
+</script>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from "three";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+
+const S = window.SPRUNK;
+const wrap = document.getElementById("canWrap");
+const canvas = document.getElementById("can3d");
+
+let renderer = null;
+try {
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: "high-performance" });
+} catch (err) {
+  S.useFallback();
+}
+if (renderer) await init();
+
+function roundRect(s, x, y, w, h, r) {
+  s.moveTo(x + r, y); s.lineTo(x + w - r, y); s.quadraticCurveTo(x + w, y, x + w, y + r);
+  s.lineTo(x + w, y + h - r); s.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  s.lineTo(x + r, y + h); s.quadraticCurveTo(x, y + h, x, y + h - r);
+  s.lineTo(x, y + r); s.quadraticCurveTo(x, y, x + r, y);
+}
+
+async function init() {
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.0;
+
+  const scene = new THREE.Scene();
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
+
+  const camera = new THREE.PerspectiveCamera(28, 1, 0.1, 100);
+  camera.position.set(0, 0, 13);
+
+  const key = new THREE.DirectionalLight(0xffffff, 1.4); key.position.set(4, 5, 7); scene.add(key);
+  const rim = new THREE.DirectionalLight(0xc8ff7a, 2.4); rim.position.set(-6, 2, -4); scene.add(rim);
+  const warm = new THREE.DirectionalLight(0xfff1a8, 0.6); warm.position.set(5, -3, 2); scene.add(warm);
+
+  await S.fontsReady;
+
+  const labelTex = new THREE.CanvasTexture(S.drawLabel(S.PALETTES.original, 2048, 1024));
+  labelTex.colorSpace = THREE.SRGBColorSpace;
+  labelTex.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+  const dropTex = new THREE.CanvasTexture(S.drawDroplets(1024, 512));
+
+  const labelMat = new THREE.MeshPhysicalMaterial({
+    map: labelTex, metalness: 0.35, roughness: 0.32,
+    clearcoat: 1, clearcoatRoughness: 0.18,
+    bumpMap: dropTex, bumpScale: 2
+  });
+  const metal = new THREE.MeshStandardMaterial({ color: 0xd5dcda, metalness: 1, roughness: 0.28, side: THREE.DoubleSide });
+  const metalDark = new THREE.MeshStandardMaterial({ color: 0xaeb8b4, metalness: 1, roughness: 0.45, side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });
+
+  const can = new THREE.Group();
+  can.rotation.order = "XZY";
+  scene.add(can);
+
+  can.add(new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 3, 160, 1, true, -Math.PI, Math.PI * 2), labelMat));
+  const lathe = (pts) => new THREE.LatheGeometry(pts.map(([x, y]) => new THREE.Vector2(x, y)), 160);
+  can.add(new THREE.Mesh(lathe([[1, 1.5], [1, 1.56], [0.985, 1.62], [0.95, 1.68], [0.9, 1.74], [0.866, 1.79], [0.86, 1.825], [0.874, 1.852], [0.862, 1.874], [0.838, 1.866], [0.826, 1.84], [0.82, 1.8]]), metal));
+  can.add(new THREE.Mesh(lathe([[0, -1.69], [0.35, -1.71], [0.6, -1.76], [0.74, -1.82], [0.79, -1.85], [0.845, -1.84], [0.905, -1.79], [0.962, -1.69], [0.994, -1.59], [1, -1.5]]), metal));
+
+  const lid = new THREE.Mesh(new THREE.CircleGeometry(0.82, 96), metal);
+  lid.rotation.x = -Math.PI / 2; lid.position.y = 1.8; can.add(lid);
+
+  const score = new THREE.Shape(); score.absellipse(0, 0, 0.24, 0.17, 0, Math.PI * 2, false);
+  const scoreMesh = new THREE.Mesh(new THREE.ShapeGeometry(score, 48), metalDark);
+  scoreMesh.rotation.x = -Math.PI / 2; scoreMesh.position.set(0, 1.801, 0.43); can.add(scoreMesh);
+
+  const tab = new THREE.Shape(); roundRect(tab, -0.13, -0.1, 0.26, 0.44, 0.12);
+  const hole = new THREE.Path(); hole.absellipse(0, 0.2, 0.075, 0.085, 0, Math.PI * 2, true); tab.holes.push(hole);
+  const tabGeo = new THREE.ExtrudeGeometry(tab, { depth: 0.018, bevelEnabled: true, bevelThickness: 0.008, bevelSize: 0.008, bevelSegments: 2, curveSegments: 24 });
+  tabGeo.rotateX(-Math.PI / 2);
+  const tabMesh = new THREE.Mesh(tabGeo, metal); tabMesh.position.set(0, 1.808, 0); can.add(tabMesh);
+  const rivet = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.05, 0.035, 24), metal);
+  rivet.position.set(0, 1.82, 0); can.add(rivet);
+
+  let W = 1, H = 1;
+  function resize() {
+    W = wrap.clientWidth || 1; H = wrap.clientHeight || 1;
+    renderer.setSize(W, H, false);
+    camera.aspect = W / H; camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(resize).observe(wrap);
+  resize();
+
+  const clock = new THREE.Clock();
+  const top = new THREE.Vector3();
+  const mqNarrow = window.matchMedia("(max-width: 760px)");
+  let idle = 0, mx = 0, my = 0;
+  renderer.setAnimationLoop(() => {
+    const dt = Math.min(clock.getDelta(), 0.05);
+    const t = clock.elapsedTime;
+    if (!S.stageVisible) return;
+    const st = S.state;
+    const narrow = mqNarrow.matches;
+    const vh = 2 * camera.position.z * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+    const vw = vh * camera.aspect;
+    if (!S.reduce) idle = Math.sin(t * 0.55) * 0.42;
+    mx += (S.mouse.x - mx) * 0.05; my += (S.mouse.y - my) * 0.05;
+    const sh = S.shake; S.shake *= Math.pow(0.05, dt);
+    const fx = S.motion && !narrow ? st.fx : 0;
+    const fy = S.motion && narrow ? 0.34 : 0;
+    const base = S.motion && narrow ? 0.6 : (narrow ? 0.9 : 1);
+    const bob = S.reduce ? 0 : Math.sin(t * 1.4) * 0.07;
+    can.position.set(fx * vw / 2 + Math.sin(t * 41) * 0.06 * sh, fy * vh / 2 + bob, 0);
+    can.rotation.set(0.12 + my * 0.12, st.rotY + idle + mx * 0.45, st.rotZ + Math.sin(t * 33) * 0.16 * sh);
+    can.scale.setScalar(base * st.scale);
+    renderer.render(scene, camera);
+
+    top.set(0, 1.9, 0); can.localToWorld(top); top.project(camera);
+    S.canScreen = { x: (top.x + 1) / 2 * W + wrap.offsetLeft, y: (1 - top.y) / 2 * H + wrap.offsetTop, w: (1.6 * base * st.scale / vw) * W };
+
+    if (!S.ready3d) {
+      S.ready3d = true;
+      canvas.classList.add("ready");
+      const fb = document.getElementById("canFallback");
+      if (fb) fb.hidden = true;
+    }
+  });
+}
+</script>
+</body>
+</html>
